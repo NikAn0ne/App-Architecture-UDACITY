@@ -7,16 +7,25 @@ import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
     // The current word
-    var word = MutableLiveData<String>()
+    var _word = MutableLiveData<String>()
+        val word : LiveData<String>
+        get() = _word
 
     // The current score
     private val _score = MutableLiveData<Int>()
     val score : LiveData<Int>
         get() = _score
 
+    private val _eventGameFinish = MutableLiveData<Boolean>()
+        val eventGameFinished : LiveData<Boolean>
+            get() = _eventGameFinish
+
 
     private lateinit var wordList: MutableList<String>
+
+    //init block
     init {
+        _eventGameFinish.value = false
         _score.value = 0
             Log.i("GameViewModel", "ViewModel created")
         resetList()
@@ -57,9 +66,9 @@ class GameViewModel : ViewModel() {
     private fun nextWord() {
         //Select and remove a word from the list
         if (wordList.isEmpty()) {
-            //gameFinished()
+            _eventGameFinish.value = true
         } else {
-            word.value = wordList.removeAt(0)
+            _word.value = wordList.removeAt(0)
         }
 
     }
@@ -71,5 +80,10 @@ class GameViewModel : ViewModel() {
      fun onCorrect() {
         _score.value = (score.value)?.plus(1)
         nextWord()
+    }
+
+    fun onGameFinished()
+    {
+        _eventGameFinish.value = false
     }
 }
