@@ -64,6 +64,7 @@ class GameFragment : Fragment() {
                 container,
                 false
         )
+
         //ViewModelProvider
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
@@ -90,11 +91,9 @@ class GameFragment : Fragment() {
         })
 
 
+        //Binding gameViewModel in game_fragment.xml
+        binding.gameViewModel = viewModel
 
-        binding.correctButton.setOnClickListener { viewModel.onCorrect()
-        }
-        binding.skipButton.setOnClickListener { viewModel.onSkip()
-            }
 
         return binding.root
 

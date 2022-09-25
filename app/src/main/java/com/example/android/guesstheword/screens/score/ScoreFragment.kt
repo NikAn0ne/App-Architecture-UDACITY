@@ -74,7 +74,7 @@ class ScoreFragment : Fragment() {
         viewModel.eventPlayAgain.observe(viewLifecycleOwner,  Observer { eventPlayAgain->
             if (eventPlayAgain)
             {
-                onPlayAgain()
+                findNavController().navigate(ScoreFragmentDirections.actionRestart())
                 viewModel.onPlayAgainComplete()
             }
         })
@@ -85,11 +85,10 @@ class ScoreFragment : Fragment() {
 
         })
 
+        binding.scoreViewModel = viewModel
+
 
         return binding.root
     }
 
-    private fun onPlayAgain() {
-        findNavController().navigate(ScoreFragmentDirections.actionRestart())
-    }
 }
