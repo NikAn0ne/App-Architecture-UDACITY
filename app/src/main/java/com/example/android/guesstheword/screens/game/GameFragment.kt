@@ -16,7 +16,11 @@
 
 package com.example.android.guesstheword.screens.game
 
+import android.database.DatabaseUtils
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,15 +42,19 @@ class GameFragment : Fragment() {
 
 
 
+
     // The list of words - the front of the list is the next word to guess
 
-
+    // Bindings
     private lateinit var binding: GameFragmentBinding
 
     private lateinit var viewModel: GameViewModel
 
+
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
 
         // Inflate view and obtain an instance of the binding class
@@ -75,6 +83,12 @@ class GameFragment : Fragment() {
                 viewModel.onGameFinished()
             }
         })
+        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime->
+            binding.timerText.text  = DateUtils.formatElapsedTime(newTime)
+            Log.i("Time", "Current time is ${binding.timerText}")
+
+        })
+
 
 
         binding.correctButton.setOnClickListener { viewModel.onCorrect()
