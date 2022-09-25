@@ -80,11 +80,7 @@ class GameFragment : Fragment() {
                 viewModel.onGameFinished()
             }
         })
-        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime->
-            binding.timerText.text  = DateUtils.formatElapsedTime(newTime)
-            Log.i("Time", "Current time is ${binding.timerText}")
 
-        })
 
 
         //Binding gameViewModel in game_fragment.xml

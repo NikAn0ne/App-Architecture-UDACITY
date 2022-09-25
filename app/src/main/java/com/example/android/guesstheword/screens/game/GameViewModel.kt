@@ -5,6 +5,7 @@ import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
@@ -19,28 +20,31 @@ class GameViewModel : ViewModel() {
         // This is the total time of the game
         const val COUNTDOWN_TIME = 10000L
     }
-    private val timer : CountDownTimer
-
     // The current word
     private val _word = MutableLiveData<String>()
-        val word : LiveData<String>
-        get() = _word
 
+    val word : LiveData<String>
+        get() = _word
     // The current score
     private val _score = MutableLiveData<Int>()
+
     val score : LiveData<Int>
         get() = _score
-
     //GameFinish event
     private val _eventGameFinish = MutableLiveData<Boolean>()
-        val eventGameFinished : LiveData<Boolean>
+    val eventGameFinished : LiveData<Boolean>
             get() = _eventGameFinish
 
 
     //Timer
     private  val _currentTime = MutableLiveData<Long>()
-        val currentTime : LiveData<Long>
+
+    private val timer : CountDownTimer
+    val currentTime : LiveData<Long>
             get() = _currentTime
+    val currentTimeString = Transformations.map(currentTime) { time->
+        DateUtils.formatElapsedTime(time)
+    }
 
 
     private lateinit var wordList: MutableList<String>
