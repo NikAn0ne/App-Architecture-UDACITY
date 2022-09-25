@@ -17,13 +17,13 @@
 package com.example.android.guesstheword.screens.game
 
 import android.database.DatabaseUtils
-import android.os.Bundle
-import android.os.CountDownTimer
+import android.os.*
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -81,6 +81,16 @@ class GameFragment : Fragment() {
             }
         })
 
+        viewModel.eventBuzz.observe(viewLifecycleOwner, Observer { eventBuzz->
+            if (eventBuzz != GameViewModel.BuzzType.NO_BUZZ)
+            {
+                buzz(eventBuzz.pattern)
+                viewModel.onBuzzComplete()
+            }
+        })
+
+
+
 
 
         //Binding gameViewModel in game_fragment.xml
@@ -92,6 +102,21 @@ class GameFragment : Fragment() {
 
         return binding.root
 
+
+
+    }
+
+    private fun buzz(pattern: LongArray) {
+        val buzzer = activity?.getSystemService<Vibrator>()
+
+        buzzer?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
+            } else {
+                //deprecated in API 26
+                buzzer.vibrate(pattern, -1)
+            }
+        }
     }
 
     /**
@@ -106,6 +131,7 @@ class GameFragment : Fragment() {
         val action = GameFragmentDirections.actionGameToScore(currentScore)
         findNavController(this).navigate(action)
     }
+
 
     /**
      * Moves to the next word in the list
